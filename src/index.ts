@@ -1,16 +1,21 @@
-import { Hono } from 'hono'
-import { cors } from 'hono/cors'
-import { serve } from '@hono/node-server'
+import { Hono } from "hono"
+import { cors } from "hono/cors"
+import { serve } from "@hono/node-server"
+
+import { router } from "./routes/index"
 
 const app = new Hono()
 
-app.use('/*', cors())
+// global middleware
+app.use("/*", cors())
 
-app.get('/', (c) => {
-  return c.json({ message: 'AngstromSCD API' })
-})
+// root route
+app.get("/", (c) => c.json({ message: "AngstromSCD API" }))
 
-const port = 3001
+// register routes
+app.route("/", router)
+
+const port = Number(process.env.PORT ?? 3001)
 console.log(`Server is running on port ${port}`)
 
 serve({
